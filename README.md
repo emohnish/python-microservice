@@ -16,6 +16,6 @@ http://localhost:5000/
 
 Output: Hello World!
 
-http://localhost:5000/'<name>'
+http://localhost:5000/Name
 
-Output: Hello '<name>'
+Output: Hello Name
