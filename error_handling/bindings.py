@@ -31,7 +31,6 @@ from error_handling.handlers import (
     handle_error_page_505
 )
 
-# The HTTP Code keys here are all supported status codes.
 HTTP_STATUS_TO_HANDLER = {
     400: handle_error_page_400,  # Bad Request
     401: handle_error_page_401,  # Unauthorized
@@ -59,7 +58,6 @@ HTTP_STATUS_TO_HANDLER = {
     505: handle_error_page_505,  # HTTP Version Not Supported
 }
 
-# Register a list of "regular" python Exception classes to yield HTTP statuses.
 REGISTERED_EXCEPTIONS = {
     400: [],
     401: [],
@@ -90,28 +88,22 @@ REGISTERED_EXCEPTIONS = {
 
 def register_exceptions(status_code, exceptions):
 
-    # This code simply adds the exceptions to the REGISTERED_EXCEPTIONS list.
-    # The exceptions will be registers with the Flask app in another routine.
     if status_code not in HTTP_STATUS_TO_HANDLER:
         raise UnsupportedHTTPStatus(status_code)
 
-    # Prove all exceptions in list are an Exception type.
     invalid_objects = [v for v in exceptions if not issubclass(v, Exception)]
     if invalid_objects:
         raise InvalidServerErrorsList(invalid_objects)
-    print(HTTP_STATUS_TO_HANDLER)
-    # Add more exceptions to the handler's list.
+
     REGISTERED_EXCEPTIONS[status_code].extend(exceptions)
 
 
 def bind_error_handlers(app, register_status_dict={}):
 
-    # Read optional register_status_dict into system.
     if register_status_dict:
         for status_code, exc_type_list in register_status_dict.items():
             register_exceptions(status_code, exc_type_list)
 
-    # Register everything with Flask app now.
     for status_code, exc_type_list in REGISTERED_EXCEPTIONS.items():
         for exec_type in exc_type_list:
             app.register_error_handler(

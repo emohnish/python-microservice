@@ -21,7 +21,6 @@ def handle_error_page(exc, status=500):
             log.exception('Uncaught Server Error...')
 
     # Basic Flask expects a str body.
-    # JSON Flask_RESTPlus expects a dict body.
     return json.dumps({'message': str(exc)}), status
 
 
